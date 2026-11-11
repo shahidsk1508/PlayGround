@@ -81,30 +81,46 @@ const road=makeRoadRibbon(10.5,M.road),roadEdges=[makeRoadRibbon(.2,M.edge,-5.15
 const stripes=[];for(let z=-72;z<170;z+=12){const stripe=box(scene,roadCurve(z+2.4),.025,z,.14,.025,4.7,M.white);stripe.castShadow=false;stripes.push(stripe)}
 // distant crop rows and scattered field patches
 for(let i=0;i<38;i++){const x=(i%2?1:-1)*(8+Math.random()*65),z=Math.random()*180+12;const patch=new THREE.Mesh(new THREE.CircleGeometry(1+Math.random()*2,8),i%3?M.grass2:M.sand);patch.rotation.x=-Math.PI/2;patch.position.set(x,-.145,z);patch.scale.set(1.7,.5,1);scene.add(patch)}
-// Detailed little delivery truck, kept in view while the village rolls toward it
+// Detailed tanker truck inspired by the village supply reference: long blue tank, white cab, and sturdy utility profile.
 const truck=new THREE.Group();truck.position.set(0,0,-2.4);scene.add(truck);
-roundedBox(truck,0,.91,.05,2.18,.48,4.18,.12,mat('#176f70',.72));box(truck,0,.59,-.3,1.9,.13,3.55,M.dark);
-// water tank: smooth horizontal steel vessel with restrained safety bands
-const tankMat=mat('#d6ddda',.3),tank=new THREE.Mesh(new THREE.CylinderGeometry(.85,.85,3.38,32,1,false),tankMat);tank.rotation.x=Math.PI/2;tank.position.set(0,1.87,.28);tank.castShadow=true;tank.receiveShadow=true;truck.add(tank);
-for(const z of [-1.42,1.98]){const cap=new THREE.Mesh(new THREE.SphereGeometry(.85,24,18),tankMat);cap.scale.set(1,1,.24);cap.position.set(0,1.87,z);cap.castShadow=true;truck.add(cap)}
-const tankBands=mat('#087f83',.36);for(const z of [-1.05,1.55]){const band=new THREE.Mesh(new THREE.TorusGeometry(.852,.035,10,32),tankBands);band.position.set(0,1.87,z);truck.add(band)}
-// Tank fittings, hose reel, rear ladder and reinforced support frame.
-box(truck,0,1.18,.25,2.2,.18,3.9,M.dark);for(const x of [-.78,.78])box(truck,x,1.36,.25,.12,.2,3.55,M.metal);
-box(truck,0,2.88,.18,1.05,.15,1.15,M.orange);cylinder(truck,0,3.03,.18,.12,.12,.36,M.metal,10);cylinder(truck,.45,2.82,-1.5,.17,.17,.13,M.metal,12);cylinder(truck,.45,2.82,-1.5,.1,.1,.15,M.teal,12);
-for(const x of [-.77,.77]){box(truck,x,1.74,2.08,.08,.92,.08,M.metal);for(let y=1.38;y<2.2;y+=.2)box(truck,x,y,2.08,.12,.055,.12,M.orange)}
-// cab, windshield, grille and lights
-const cabPaint=mat('#d85b38',.55),glassPaint=mat('#427984',.24);roundedBox(truck,0,1.29,-1.62,2.04,1.31,1.62,.12,cabPaint);box(truck,0,1.31,-2.455,1.52,.34,.045,M.dark);box(truck,0,.99,-2.49,.74,.2,.05,M.metal);
-// Windscreen sits on the sloped nose; framed door glass and handles add scale.
-box(truck,0,1.86,-2.29,1.55,.56,.055,glassPaint,-.18);box(truck,0,1.86,-2.32,.045,.58,.07,cabPaint,-.18);
-for(const x of [-.89,.89]){box(truck,x,1.82,-1.63,.045,.53,1.13,glassPaint);box(truck,x,1.82,-1.04,.07,.61,.09,cabPaint);box(truck,x,1.82,-2.19,.07,.61,.09,cabPaint);box(truck,x,1.27,-1.58,.08,.08,.18,M.metal);}
-for(const x of [-.79,.79]){const lamp=new THREE.Mesh(new THREE.BoxGeometry(.34,.2,.08),new THREE.MeshStandardMaterial({color:'#fff0c8',emissive:'#ffbd62',emissiveIntensity:.22,roughness:.25}));lamp.position.set(x,1.04,-2.5);truck.add(lamp);box(truck,x,1.04,-2.55,.1,.12,.09,M.orange);box(truck,x,.65,-2.5,.38,.12,.26,M.dark)}
-box(truck,0,.55,-2.46,2.12,.14,.32,M.dark);for(let n=0;n<5;n++)box(truck,-.48+n*.24,.99,-2.51,.055,.22,.035,M.metal);for(const x of [-1.13,1.13]){box(truck,x,1.52,-1.68,.22,.11,.16,M.dark);box(truck,x*1.25,1.64,-1.68,.08,.09,.08,M.metal)}
-// Rubber tires with inset steel hubs and subtle fenders.
-const rubber=mat('#202522',.95),rim=mat('#bbc0b8',.52);for(const x of [-1.08,1.08])for(const z of [-1.55,1.35]){const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.44,.44,.28,24),rubber);wheel.rotation.z=Math.PI/2;wheel.position.set(x,.47,z);wheel.castShadow=true;truck.add(wheel);const hub=new THREE.Mesh(new THREE.CylinderGeometry(.24,.24,.3,20),rim);hub.rotation.z=Math.PI/2;hub.position.set(x,.47,z);truck.add(hub);const cap=new THREE.Mesh(new THREE.CylinderGeometry(.105,.105,.31,16),M.metal);cap.rotation.z=Math.PI/2;cap.position.set(x,.47,z);truck.add(cap);roundedBox(truck,x*1.04,.78,z,.14,.12,1.02,.04,cabPaint);box(truck,x,.27,z+.42,.12,.42,.12,M.dark)}
-// side mirrors and small amber warning lights
-for(const x of [-1.12,1.12]){box(truck,x,1.68,-1.63,.18,.07,.07,M.dark);box(truck,x*1.35,1.72,-1.63,.22,.16,.12,M.metal);sphere(truck,x*1.35,1.73,-1.55,.055,M.orange,.8,1,1)}
-// little driver silhouette in the cab
-sphere(truck,.35,1.62,-1.74,.19,M.sand,.8,1,1);box(truck,.35,1.35,-1.75,.33,.36,.25,M.teal);
+const tankerBlue=mat('#1c77bf',.72),tankWhite=mat('#eef5fb',.54),metalSilver=mat('#c7d3d8',.55),cabDark=mat('#2b2d31',.8),glassTint=mat('#8ab2ba',.24),safetyOrange=mat('#ee8a36',.72),hazardYellow=mat('#f4d35d',.8),bumperBlack=mat('#11181c',.95);
+
+// Chassis and main support frame.
+roundedBox(truck,0,.82,.04,2.26,.46,4.32,.12,mat('#20313a',.82));
+box(truck,0,.34,-.28,2.08,.14,3.9,bumperBlack);
+box(truck,0,1.12,.22,2.16,.16,4.0,M.dark);
+for(const x of [-1.02,1.02]){box(truck,x,1.38,.28,.14,.24,3.8,M.metal);box(truck,x,.92,.3,.09,.28,.35,M.metal)}
+
+// Large water tank with painted stripes and steel bands.
+const tank=new THREE.Mesh(new THREE.CylinderGeometry(1.02,1.02,4.36,32,1,false),tankWhite);tank.rotation.x=Math.PI/2;tank.position.set(0,1.92,.32);tank.castShadow=true;tank.receiveShadow=true;truck.add(tank);
+for(const z of [-1.72,1.92]){const cap=new THREE.Mesh(new THREE.SphereGeometry(1.02,24,18),tankWhite);cap.scale.set(1,1,.22);cap.position.set(0,1.92,z);cap.castShadow=true;truck.add(cap)}
+for(const z of [-1.32,1.58]){const band=new THREE.Mesh(new THREE.TorusGeometry(1.03,.045,10,32),tankerBlue);band.position.set(0,1.92,z);truck.add(band)}
+for(const x of [-.72,.72]){box(truck,x,1.06,2.18,.08,1.0,.08,M.metal);box(truck,x,1.92,2.16,.09,.14,.12,safetyOrange)}
+box(truck,0,2.94,.16,1.3,.14,1.2,safetyOrange);cylinder(truck,0,3.1,.16,.14,.12,.4,M.metal,10);
+
+// Front utility cab with long hood and modern glass.
+roundedBox(truck,0,1.3,-1.82,2.34,1.3,1.88,.12,tankerBlue);
+box(truck,0,1.28,-2.42,1.68,.42,.05,cabDark);
+box(truck,0,1.84,-2.32,1.56,.54,.06,glassTint,-.12);
+box(truck,0,1.84,-2.48,.06,.58,.08,tankerBlue,-.12);
+for(const x of [-0.88,0.88]){box(truck,x,1.76,-1.65,.06,.58,1.28,glassTint);box(truck,x,1.75,-2.18,.08,.58,.1,tankerBlue);box(truck,x,1.16,-2.54,.2,.18,.12,metalSilver);box(truck,x,.66,-2.52,.38,.12,.28,cabDark)}
+box(truck,0,.92,-2.52,.8,.18,.08,metalSilver);
+for(let n=0;n<5;n++)box(truck,-.58+n*.29,1.02,-2.54,.065,.22,.038,metalSilver);
+box(truck,0,1.58,-1.45,.86,.12,.18,cabDark);box(truck,0,1.7,-1.92,.8,.18,.14,metalSilver);
+
+// Headlamps, bumper, and side mirrors.
+for(const x of [-0.93,0.93]){const lamp=new THREE.Mesh(new THREE.BoxGeometry(.36,.18,.08),new THREE.MeshStandardMaterial({color:'#fff1ca',emissive:'#ffbf5f',emissiveIntensity:.35,roughness:.18}));lamp.position.set(x,1.08,-2.56);truck.add(lamp);box(truck,x,1.08,-2.6,.14,.12,.1,safetyOrange)}
+for(const x of [-1.16,1.16]){box(truck,x,1.76,-1.68,.18,.08,.08,cabDark);box(truck,x*1.42,1.8,-1.68,.24,.16,.12,metalSilver);sphere(truck,x*1.42,1.82,-1.54,.06,hazardYellow,.8,1,1)}
+
+// Driver silhouette and interior details.
+box(truck,.34,1.36,-1.74,.28,.34,.24,M.teal);sphere(truck,.34,1.66,-1.74,.18,M.sand,.82,1,.9);
+box(truck,.34,.84,-2.2,.19,.1,.18,M.dark);
+
+// Pump and rear utility details.
+box(truck,0,1.32,1.5,1.58,.12,1.12,M.dark);box(truck,0,2.28,2.08,1.1,.12,.66,metalSilver);cylinder(truck,.58,2.9,-1.4,.18,.18,.12,M.metal,12);cylinder(truck,.58,2.9,-1.4,.1,.1,.15,tankerBlue,12);
+
+// Rubber tires with thick hubs and fenders.
+const rubber=mat('#202522',.95),rim=mat('#bbc0b8',.52);for(const x of [-1.15,1.15])for(const z of [-1.58,1.42]){const wheel=new THREE.Mesh(new THREE.CylinderGeometry(.47,.47,.28,24),rubber);wheel.rotation.z=Math.PI/2;wheel.position.set(x,.47,z);wheel.castShadow=true;truck.add(wheel);const hub=new THREE.Mesh(new THREE.CylinderGeometry(.25,.25,.3,20),rim);hub.rotation.z=Math.PI/2;hub.position.set(x,.47,z);truck.add(hub);const cap=new THREE.Mesh(new THREE.CylinderGeometry(.1,.1,.31,16),M.metal);cap.rotation.z=Math.PI/2;cap.position.set(x,.47,z);truck.add(cap);roundedBox(truck,x*1.06,.82,z,.15,.14,1.1,.05,tankerBlue);box(truck,x,.28,z+.42,.13,.42,.12,cabDark)}
 // Oncoming village traffic: compact painted cars and everyday motorcycles.
 function makeCar(color){const g=new THREE.Group(),paint=mat(color,.5),glass=mat('#739da0',.26),rubber=mat('#202522',.96),chrome=mat('#bbc0b8',.45);roundedBox(g,0,.62,0,1.72,.56,3.12,.16,paint);roundedBox(g,0,.99,-.2,1.42,.58,1.67,.12,paint);box(g,0,.99,-.2,1.28,.43,1.43,glass);box(g,0,.99,-.2,.045,.48,1.49,paint);box(g,0,.7,-1.61,1.36,.13,.1,chrome);box(g,0,.7,1.61,1.36,.13,.1,chrome);box(g,0,.84,-1.59,.48,.13,.08,M.dark);for(const x of [-.61,.61]){box(g,x,.82,-1.59,.3,.18,.07,M.white);box(g,x,.82,1.59,.3,.16,.07,M.red);box(g,x,.72,-1.64,.15,.07,.025,M.orange)}for(const x of [-.866,.866]){box(g,x,1.02,-.58,.04,.35,.72,glass);box(g,x,1.02,.37,.04,.35,.52,glass);box(g,x,1.02,-.07,.06,.39,.09,paint);box(g,x,1.02,.68,.06,.39,.09,paint);box(g,x,.63,-.45,.045,.08,.15,chrome)}for(const x of [-.87,.87])for(const z of [-.98,1]){const tire=new THREE.Mesh(new THREE.CylinderGeometry(.3,.3,.2,20),rubber);tire.rotation.z=Math.PI/2;tire.position.set(x,.34,z);tire.castShadow=true;g.add(tire);const hub=new THREE.Mesh(new THREE.CylinderGeometry(.16,.16,.21,16),chrome);hub.rotation.z=Math.PI/2;hub.position.set(x,.34,z);g.add(hub);const center=new THREE.Mesh(new THREE.CylinderGeometry(.065,.065,.22,12),M.dark);center.rotation.z=Math.PI/2;center.position.set(x,.34,z);g.add(center)}return g}
 function makeBike(color){const g=new THREE.Group(),paint=mat(color,.5),rubber=mat('#202522',.94),steel=mat('#aeb9af',.48),seat=mat('#292b28',.8);for(const z of [-.82,.82]){const wheel=new THREE.Mesh(new THREE.TorusGeometry(.34,.07,10,24),rubber);wheel.position.set(0,.39,z);wheel.rotation.y=Math.PI/2;wheel.castShadow=true;g.add(wheel);const hub=new THREE.Mesh(new THREE.CylinderGeometry(.055,.055,.16,12),steel);hub.rotation.z=Math.PI/2;hub.position.set(0,.39,z);g.add(hub);for(let n=0;n<8;n++){const a=n*Math.PI/4;const spoke=box(g,0,.39+Math.cos(a)*.17,z+Math.sin(a)*.17,.025,.025,.61,steel);spoke.rotation.x=a}}box(g,0,.67,0,.12,.13,1.08,steel);box(g,0,.56,-.1,.3,.34,.34,M.dark);box(g,0,.78,-.18,.38,.28,.52,paint);roundedBox(g,0,.84,.38,.38,.13,.52,.06,seat);for(const x of [-.11,.11]){box(g,x,.74,-.62,.055,.66,.07,steel,-.23);box(g,x,.95,-.75,.045,.24,.055,M.dark,-.16)}box(g,0,.99,-.79,.52,.055,.06,steel);sphere(g,0,.88,-.9,.13,M.white,.85,.85,.65);box(g,0,.44,.78,.56,.06,.28,M.dark);for(const side of [-1,1]){box(g,side*.18,.58,.02,.08,.48,.08,steel,.48);box(g,side*.21,.48,-.42,.06,.48,.06,steel,-.52)}const rider=new THREE.Group();cylinder(rider,0,1.22,.02,.17,.22,.52,M.teal,10);sphere(rider,0,1.61,-.12,.2,M.orange,.9,1,1);box(rider,0,1.34,-.38,.52,.075,.075,M.sand,-.1);for(const x of [-.15,.15]){box(rider,x,1.02,.27,.12,.42,.14,M.dark,.38);box(rider,x,1.1,.47,.12,.12,.22,M.dark)}g.add(rider);return g}
