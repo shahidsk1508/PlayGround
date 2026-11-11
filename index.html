@@ -7,7 +7,7 @@
 <link rel="icon" href="data:,">
 <title>Naregaon Water Supply — Village Water Run</title>
 <style>
-:root{--ink:#172a2b;--cream:#fff8e8;--orange:#f27d35;--teal:#087f83;--muted:#75817a;--shadow:0 12px 35px #18312d25}
+:root{--ink:#f7f1df;--cream:#fff8e8;--orange:#f27d35;--teal:#087f83;--muted:#b6b5a8;--shadow:0 12px 35px #0008}
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#d9eef4;color:var(--ink);font-family:Inter,ui-rounded,"Arial Rounded MT Bold",system-ui,sans-serif;touch-action:none}canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 #game{position:fixed;inset:0;pointer-events:none;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
 .topbar{position:absolute;top:max(14px,env(safe-area-inset-top));left:16px;right:16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
@@ -28,6 +28,13 @@
 @media (orientation:portrait) and (max-width:900px){.orientation-tip{display:block;top:auto;bottom:94px;left:50%;transform:translateX(-50%)}}
 .orientation-tip{padding:10px 15px;border:1px solid #ffffff50;background:#163839e8}
 @media (orientation:landscape) and (max-height:520px){.orientation-tip{display:none}}
+/* Cinematic open-world HUD treatment */
+.topbar,.task,.speedometer{filter:drop-shadow(0 3px 8px #0009)}
+.brand,.pill,.task{background:linear-gradient(145deg,#17211feF,#111916eF);color:#f7f1df;border:1px solid #d6bd7655;backdrop-filter:blur(10px);box-shadow:0 8px 24px #0007,inset 0 1px #ffffff18}
+.brand{border-radius:8px 18px 8px 18px}.brand-icon{border-radius:6px 12px 6px 12px;background:linear-gradient(145deg,#e4bd5c,#90621d);color:#18211e}.brand small,.pill span,.task-title{color:#d3b86e}.pill{border-radius:7px 14px 7px 14px}.task{border-radius:7px 16px 7px 16px}.water-meter{background:#37433c}.water-fill{background:linear-gradient(90deg,#2fc3d1,#82e4df);box-shadow:0 0 10px #43d5d599}.speedometer{color:#f9f0cf;text-shadow:0 2px 3px #000,0 0 12px #fff8}
+.icon-btn{border:1px solid #d7bd7380;background:#151c19e8;color:#fff4d3;box-shadow:0 8px 22px #0008,inset 0 1px #ffffff20;border-radius:8px 15px 8px 15px;backdrop-filter:blur(8px)}.icon-btn:active,.icon-btn.pressed{background:#dfad46;color:#17201d}.control-btn{border:1px solid #d7bd7380;background:#151c19d9;color:#fff4d3;box-shadow:0 8px 22px #0008,inset 0 1px #ffffff20;border-radius:12px 22px 12px 22px;backdrop-filter:blur(8px)}.gas{background:linear-gradient(145deg,#c69232,#805719);color:#fff8e8}.brake{background:#18201de8;color:#fff4d3}.control-btn:active,.control-btn.pressed{background:#dfad46;color:#17201d}
+.overlay{background:linear-gradient(145deg,#060b0add,#121b18a8 50%,#060b0ddd);backdrop-filter:blur(8px)}.panel{background:linear-gradient(145deg,#202a24,#101613);border:1px solid #d7bd735c;border-radius:10px 28px 10px 28px;color:#fff4d3;box-shadow:0 24px 70px #000b,inset 0 1px #ffffff16}.panel p{color:#d0d0c3}.eyebrow{color:#e0bb5d}.badge{background:#303b30;color:#eadba9;border:1px solid #ddbd6550}.play-btn,.deliver{background:linear-gradient(110deg,#c55230,#ee9239);box-shadow:0 8px 22px #0007;border-radius:8px 18px 8px 18px}
+@media (prefers-reduced-motion:no-preference){.brand,.pill,.task,.control-btn{transition:transform .18s,background .18s,box-shadow .18s}.control-btn:hover{transform:translateY(-2px);box-shadow:0 11px 26px #0009}}
 </style>
 </head>
 <body>
@@ -57,11 +64,11 @@ import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.m
 const canvas=document.querySelector('#scene');
 const renderer=new THREE.WebGLRenderer({canvas,antialias:true,alpha:false});
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.8));renderer.setSize(innerWidth,innerHeight,false);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.1;
-const scene=new THREE.Scene();scene.background=new THREE.Color('#a9d8e6');scene.fog=new THREE.Fog('#a9d8e6',48,190);
-const camera=new THREE.PerspectiveCamera(54,innerWidth/innerHeight,.1,260);camera.position.set(0,7.8,-15.5);camera.lookAt(0,1.1,10);
-scene.add(new THREE.HemisphereLight('#f5f8df','#8a7353',2));const sun=new THREE.DirectionalLight('#fff0c9',3.2);sun.position.set(-16,28,-7);sun.castShadow=true;sun.shadow.mapSize.set(1024,1024);sun.shadow.camera.left=-24;sun.shadow.camera.right=24;sun.shadow.camera.top=30;sun.shadow.camera.bottom=-24;scene.add(sun);
+const scene=new THREE.Scene();scene.background=new THREE.Color('#c68a68');scene.fog=new THREE.Fog('#c68a68',42,170);
+const camera=new THREE.PerspectiveCamera(54,innerWidth/innerHeight,.1,260);camera.position.set(0,6.7,-13.8);camera.lookAt(0,1.1,9);
+scene.add(new THREE.HemisphereLight('#ffe3c0','#51483a',1.65));const sun=new THREE.DirectionalLight('#ffc27a',3.4);sun.position.set(-16,28,-7);sun.castShadow=true;sun.shadow.mapSize.set(1536,1536);sun.shadow.camera.left=-24;sun.shadow.camera.right=24;sun.shadow.camera.top=30;sun.shadow.camera.bottom=-24;scene.add(sun);
 const mat=(color,rough=.85)=>new THREE.MeshStandardMaterial({color,roughness:rough});
-const M={grass:mat('#9dbd69'),grass2:mat('#89ae60'),road:mat('#535d5a'),edge:mat('#ddc89a'),white:mat('#fff4d8'),dark:mat('#243536'),orange:mat('#ed8743'),teal:mat('#11878a'),blue:mat('#39b6c8'),red:mat('#d65b43'),sand:mat('#d9b879'),wall:mat('#e9c98f'),cream:mat('#f3e5bf'),green:mat('#627d50'),leaf:mat('#477953'),leaf2:mat('#719858'),wood:mat('#7d4d32'),black:mat('#202827'),metal:mat('#aeb9af'),water:mat('#24a8c0',.32)};
+const M={grass:mat('#65704a'),grass2:mat('#77704a'),road:mat('#454846'),edge:mat('#b9a17c'),white:mat('#e8deca'),dark:mat('#202827'),orange:mat('#ed8743'),teal:mat('#11878a'),blue:mat('#39b6c8'),red:mat('#d65b43'),sand:mat('#b99b6b'),wall:mat('#c5a77c'),cream:mat('#d7c6a5'),green:mat('#627d50'),leaf:mat('#456347'),leaf2:mat('#66764b'),wood:mat('#674331'),black:mat('#202321'),metal:mat('#aeb9af'),water:mat('#24a8c0',.32)};
 function box(parent,x,y,z,w,h,d,material,rx=0,ry=0,rz=0){const mesh=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material);mesh.position.set(x,y,z);mesh.rotation.set(rx,ry,rz);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh}
 function roundedBox(parent,x,y,z,w,h,d,r,material){const s=new THREE.Shape(),a=-w/2,b=-h/2;s.moveTo(a+r,b);s.lineTo(-a-r,b);s.quadraticCurveTo(-a,b,-a,b+r);s.lineTo(-a,-b-r);s.quadraticCurveTo(-a,-b,-a-r,-b);s.lineTo(a+r,-b);s.quadraticCurveTo(a,-b,a,-b-r);s.lineTo(a,b+r);s.quadraticCurveTo(a,b,a+r,b);const geo=new THREE.ExtrudeGeometry(s,{depth:d,bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:Math.min(r*.3,.06),bevelThickness:Math.min(r*.3,.06),curveSegments:4});geo.translate(0,0,-d/2);const mesh=new THREE.Mesh(geo,material);mesh.position.set(x,y,z);mesh.castShadow=true;mesh.receiveShadow=true;parent.add(mesh);return mesh}
 function sphere(parent,x,y,z,r,material,sx=1,sy=1,sz=1){const mesh=new THREE.Mesh(new THREE.SphereGeometry(r,12,10),material);mesh.position.set(x,y,z);mesh.scale.set(sx,sy,sz);mesh.castShadow=true;parent.add(mesh);return mesh}
